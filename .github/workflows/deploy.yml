@@ -1,17 +1,15 @@
 # .github/workflows/deploy.yml
 
-name: Deploy to GitHub Pages via NPM
+name: Deploy to GitHub Pages
 
-# กำหนดว่า Workflow นี้จะทำงานเมื่อมีการ Push ไปที่ Branch main
 on:
   push:
     branches:
       - main
   workflow_dispatch:
 
-# กำหนดสิทธิ์: จำเป็นสำหรับการ Deploy ไปยัง gh-pages
 permissions:
-  contents: write # เปลี่ยนเป็น write เพื่อให้ gh-pages สร้าง branch และ push ได้
+  contents: read
   pages: write
   id-token: write
 
@@ -29,18 +27,25 @@ jobs:
         with:
           node-version: '20' 
       
-      # 3. ติดตั้ง Dependencies (gh-pages จะถูกติดตั้งเพราะอยู่ใน package.json)
+      # 3. ติดตั้ง Dependencies (gh-pages ไม่จำเป็นแล้ว)
       - name: Install dependencies
         run: npm install
         
-      # 4. รันคำสั่ง Deploy (รัน 'predeploy' -> 'build' -> 'gh-pages -d dist')
-      - name: Run NPM Deploy Script
-        run: npm run deploy
+      # 4. รันคำสั่ง Build
+      - name: Build project
+        run: npm run build
         
-      # 5. แจ้ง GitHub Pages ว่าการ Deploy เสร็จสิ้น
-      #    **ขั้นตอนนี้สำคัญสำหรับ GitHub Actions Pages
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+      # 5. ตั้งค่า GitHub Pages Environment
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # 6. Upload โฟลเดอร์ Build ไปที่ GitHub Pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          # gh-pages จะ push ไปที่ branch 'gh-pages' ซึ่งต้องใช้เป็น source
-          token: ${{ secrets.GITHUB_TOKEN }}
+          path: './dist' # โฟลเดอร์ที่ Vite Build ออกมา
+          
+      # 7. Deploy ไปที่ GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
