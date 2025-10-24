@@ -33,13 +33,12 @@ jobs:
       - name: Install dependencies
         run: npm install
         
-      # 4. **แก้ไข Base URL ใน Vite.config.js ชั่วคราว**
-      #    ขั้นตอนนี้สำคัญมากสำหรับ GitHub Pages
+      # 4. ตั้งค่า Base URL โดยการเพิ่มบรรทัด 'base' (วิธีนี้แน่นอนกว่าการแทนที่)
       - name: Inject Base Path for GitHub Pages
         run: |
-          # อ่านและแทนที่ base: '/...' ด้วย base: '/ชื่อ_Repo/'
-          # ในกรณีนี้คือ bannerflow-site
-          sed -i "s|base: '.*'|base: '/bannerflow-site/'|" vite.config.ts || true
+          # 1. ค้นหาบรรทัด 'export default defineConfig(({ mode }) => ({'
+          # 2. เพิ่มบรรทัด 'base: "/bannerflow-site/",' เข้าไปหลังบรรทัดนั้น
+          sed -i '/export default defineConfig(({ mode }) => ({/a\  base: "/bannerflow-site/",' vite.config.ts
 
       # 5. รันคำสั่ง Build
       - name: Build project
