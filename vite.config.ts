@@ -6,9 +6,9 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   // ******************************************************
-  // ✅ เพิ่ม 'base' Property เพื่อให้ GitHub Actions แก้ไขได้
+  // ✅ ต้องเพิ่ม 'base' property ไว้ตรงนี้
   // ******************************************************
-  base: "/", // ค่าเริ่มต้นนี้จะถูกแทนที่ด้วย '/bannerflow-site/' โดย GitHub Actions
+  base: "/", // **ห้ามลืมเพิ่มบรรทัดนี้**
   
   server: {
     host: "::",
