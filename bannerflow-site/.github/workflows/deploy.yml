@@ -1,1 +1,63 @@
+# .github/workflows/deploy.yml
 
+name: Deploy to GitHub Pages
+
+# กำหนดว่า Workflow นี้จะทำงานเมื่อไหร่ (เมื่อมีการ Push ไปที่ Branch main)
+on:
+  push:
+    branches:
+      - main
+  # อนุญาตให้รัน Workflow นี้ด้วยมือจากแท็บ Actions ได้
+  workflow_dispatch:
+
+# กำหนดสิทธิ์: ต้องให้สิทธิ์ในการเขียน (write) สำหรับ Pages และอ่าน (read) สำหรับ Contents
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# กำหนด Jobs ที่ต้องทำ
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout โค้ด
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # 2. ตั้งค่า Node.js (จำเป็นสำหรับการรัน npm)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # ใช้ Node.js เวอร์ชันล่าสุด
+      
+      # 3. ติดตั้ง Dependencies
+      - name: Install dependencies
+        run: npm install
+        
+      # 4. **แก้ไข Base URL ใน Vite.config.js ชั่วคราว**
+      #    ขั้นตอนนี้สำคัญมากสำหรับ GitHub Pages
+      - name: Inject Base Path for GitHub Pages
+        run: |
+          # อ่านและแทนที่ base: '/...' ด้วย base: '/ชื่อ_Repo/'
+          # ในกรณีนี้คือ bannerflow-site
+          sed -i "s|base: '.*'|base: '/bannerflow-site/'|" vite.config.ts || true
+
+      # 5. รันคำสั่ง Build
+      - name: Build project
+        run: npm run build
+        
+      # 6. ตั้งค่า GitHub Pages Environment
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # 7. Upload โฟลเดอร์ Build ไปที่ GitHub Pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist' # โฟลเดอร์ที่ Vite Build ออกมา
+          
+      # 8. Deploy ไปที่ GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
