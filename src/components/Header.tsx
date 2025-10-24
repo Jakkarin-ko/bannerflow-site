@@ -37,22 +37,16 @@ const Header = () => {
   const languages = ["English", "Spanish", "French", "German", "Chinese"];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
-      <div className="container mx-auto px-4 py-3">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
+      <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-primary">Business Pro</h1>
-          </div>
-
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-8">
             {navItems.map((item) => (
               <DropdownMenu key={item.label}>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-foreground hover:text-primary">
+                  <Button variant="ghost" className="text-foreground hover:text-foreground/80 font-normal px-0 h-auto">
                     {item.label}
-                    <ChevronDown className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-card border-border z-50">
@@ -73,9 +67,9 @@ const Header = () => {
           <div className="flex items-center gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button variant="outline" size="sm" className="gap-2 rounded-lg">
                   <Globe className="h-4 w-4" />
-                  <span className="hidden sm:inline">Language</span>
+                  <span>Language</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-card border-border z-50">
