@@ -5,14 +5,11 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // ******************************************************
-  // ✅ ต้องเพิ่ม 'base' property ไว้ตรงนี้
-  // ******************************************************
-  base: "/", // **ห้ามลืมเพิ่มบรรทัดนี้**
-  
+  // **เพิ่มบรรทัดนี้เพื่อแก้ปัญหา Base Path**
+  base: "/bannerflow-site/",
+
   server: {
     host: "::",
-    port: 8080,
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
