@@ -1,20 +1,20 @@
-name: Deploy to GitHub Pages
+# .github/workflows/deploy.yml
 
-# กำหนดว่า Workflow นี้จะทำงานเมื่อไหร่ (เมื่อมีการ Push ไปที่ Branch main)
+name: Deploy to GitHub Pages via NPM
+
+# กำหนดว่า Workflow นี้จะทำงานเมื่อมีการ Push ไปที่ Branch main
 on:
   push:
     branches:
       - main
-  # อนุญาตให้รัน Workflow นี้ด้วยมือจากแท็บ Actions ได้
   workflow_dispatch:
 
-# กำหนดสิทธิ์: ต้องให้สิทธิ์ในการเขียน (write) สำหรับ Pages และอ่าน (read) สำหรับ Contents
+# กำหนดสิทธิ์: จำเป็นสำหรับการ Deploy ไปยัง gh-pages
 permissions:
-  contents: read
+  contents: write # เปลี่ยนเป็น write เพื่อให้ gh-pages สร้าง branch และ push ได้
   pages: write
   id-token: write
 
-# กำหนด Jobs ที่ต้องทำ
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -23,41 +23,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      # 2. ตั้งค่า Node.js (จำเป็นสำหรับการรัน npm)
+      # 2. ตั้งค่า Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # ใช้ Node.js เวอร์ชันล่าสุด
+          node-version: '20' 
       
-      # 3. ติดตั้ง Dependencies
+      # 3. ติดตั้ง Dependencies (gh-pages จะถูกติดตั้งเพราะอยู่ใน package.json)
       - name: Install dependencies
         run: npm install
         
-      - name: Configure Vite Base Path
-        run: |
-          # 1. ติดตั้ง jq เพื่อจัดการ JSON
-          sudo apt-get install -y jq 
-          # 2. เพิ่ม "homepage" field ใน package.json
-          jq '. + {"homepage": "https://jakkarin-ko.github.io/bannerflow-site/"}' package.json > temp.json
-          mv temp.json package.json
-          # 3. ติดตั้ง 'gh-pages' (ถ้ายังไม่มี) เพื่อใช้กับ Build Command ใหม่
-          npm install gh-pages --save-dev
-
-      # 5. รันคำสั่ง Build
-      - name: Build project
-        run: npm run build
+      # 4. รันคำสั่ง Deploy (รัน 'predeploy' -> 'build' -> 'gh-pages -d dist')
+      - name: Run NPM Deploy Script
+        run: npm run deploy
         
-      # 6. ตั้งค่า GitHub Pages Environment
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      # 7. Upload โฟลเดอร์ Build ไปที่ GitHub Pages
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist' # โฟลเดอร์ที่ Vite Build ออกมา
-          
-      # 8. Deploy ไปที่ GitHub Pages
+      # 5. แจ้ง GitHub Pages ว่าการ Deploy เสร็จสิ้น
+      #    **ขั้นตอนนี้สำคัญสำหรับ GitHub Actions Pages
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # gh-pages จะ push ไปที่ branch 'gh-pages' ซึ่งต้องใช้เป็น source
+          token: ${{ secrets.GITHUB_TOKEN }}
