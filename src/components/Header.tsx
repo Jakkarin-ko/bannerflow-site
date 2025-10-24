@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Menu, X, ChevronDown, Globe } from "lucide-react";
+import { Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,8 +8,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const navItems = [
     {
       label: "Account",
@@ -39,13 +36,13 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
       <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          {/* Navigation */}
+          <nav className="flex items-center gap-4 md:gap-8 flex-wrap">
             {navItems.map((item) => (
               <DropdownMenu key={item.label}>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-foreground hover:text-foreground/80 font-normal px-0 h-auto">
+                  <Button variant="ghost" className="text-foreground hover:text-foreground/80 font-normal px-2 md:px-0 h-auto text-sm md:text-base">
                     {item.label}
                   </Button>
                 </DropdownMenuTrigger>
@@ -63,8 +60,8 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Language Selector & Mobile Menu */}
-          <div className="flex items-center gap-3">
+          {/* Language Selector */}
+          <div className="flex items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2 rounded-lg">
@@ -83,44 +80,8 @@ const Header = () => {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="lg:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <nav className="lg:hidden mt-4 pb-4 space-y-2 animate-slide-up">
-            {navItems.map((item) => (
-              <DropdownMenu key={item.label}>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="w-full justify-between text-foreground">
-                    {item.label}
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full bg-card border-border z-50">
-                  {item.items.map((subItem) => (
-                    <DropdownMenuItem 
-                      key={subItem}
-                      className="cursor-pointer hover:bg-muted"
-                    >
-                      {subItem}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ))}
-          </nav>
-        )}
       </div>
     </header>
   );
