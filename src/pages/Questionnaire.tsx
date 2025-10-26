@@ -1,6 +1,5 @@
 import { useState, useEffect, FormEvent } from "react";
-// สมมติว่า components เหล่านี้มาจาก Shadcn UI/project structure ของคุณ
-import { Button } from "@/components/ui/button"; 
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -19,13 +18,10 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 
-// !!! ⭐️ สำคัญ: ต้องเปลี่ยน URL นี้หลังจาก Deploy Backend API ใหม่ !!!
-const API_ENDPOINT = "https://your-new-api-name.onrender.com"; 
+// กำหนด Endpoint ของ API
+const API_ENDPOINT = "https://aidetect-github-io.onrender.com";
 
-// ----------------------------------------------------
-// Interfaces และ States
-// ----------------------------------------------------
-
+// โครงสร้างข้อมูลฟอร์ม
 interface FormData {
   age: string;
   urine: string;
@@ -38,22 +34,10 @@ interface FormData {
   symptoms: string[];
 }
 
-interface ModalContent {
-  title: string;
-  message: string;
-  probability: number | null; // ฟิลด์ใหม่สำหรับรับค่าความแม่นยำ/ความมั่นใจ
-}
-
 const Questionnaire = () => {
   const [serverStatus, setServerStatus] = useState<"checking" | "online" | "offline">("checking");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  const [modalContent, setModalContent] = useState<ModalContent>({ 
-    title: "", 
-    message: "",
-    probability: null // กำหนดค่าเริ่มต้นเป็น null
-  });
-
+  const [modalContent, setModalContent] = useState({ title: "", message: "" });
   const { toast } = useToast();
 
   const [formData, setFormData] = useState<FormData>({
@@ -76,9 +60,9 @@ const Questionnaire = () => {
     "Abdominal Pain", "Itchy Skin", "Dark Urine", "Bone Pain",
   ];
 
-// ----------------------------------------------------
-// 1. ตรวจสอบสถานะเซิร์ฟเวอร์ (Server Status Check)
-// ----------------------------------------------------
+  // ====================================================================
+  // 1. ตรวจสอบสถานะเซิร์ฟเวอร์ (Server Status Check)
+  // ====================================================================
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     const checkServerStatus = async () => {
@@ -88,21 +72,21 @@ const Questionnaire = () => {
         const status = data.status === "online" ? "online" : "offline";
         setServerStatus(status);
         if (status !== "online") {
-          timeoutId = setTimeout(checkServerStatus, 5000); 
+          timeoutId = setTimeout(checkServerStatus, 5000); // Re-check if offline
         }
       } catch {
         setServerStatus("offline");
-        timeoutId = setTimeout(checkServerStatus, 5000); 
+        timeoutId = setTimeout(checkServerStatus, 5000); // Re-check on error
       }
     };
     checkServerStatus();
 
-    return () => clearTimeout(timeoutId); 
+    return () => clearTimeout(timeoutId); // Cleanup timeout on component unmount
   }, []);
 
-// ----------------------------------------------------
-// 2. Form Handlers (ไม่เปลี่ยนแปลง)
-// ----------------------------------------------------
+  // ====================================================================
+  // 2. จัดการการเปลี่ยนแปลงของฟอร์ม (Form Handlers)
+  // ====================================================================
   const handleSelectChange = (field: keyof Omit<FormData, 'symptoms'>, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -116,34 +100,36 @@ const Questionnaire = () => {
     }));
   };
 
-// ----------------------------------------------------
-// 3. จัดการการส่งฟอร์มและการทำนาย (Prediction)
-// ----------------------------------------------------
+  // ====================================================================
+  // 3. จัดการการส่งฟอร์มและการทำนาย (Submission Handler)
+  // ====================================================================
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // 62-feature array for one-hot encoding (ต้องตรงกับ Backend)
+    // The comprehensive list of 62 features for one-hot encoding
     const data62Features: Record<string, number> = {
       "0-1":0,"5-15":0,"10-20":0,"40+":0,"45+":0,"50+":0,"60+":0,"65+":0,
       "<500":0,"<800":0,"350-550":0,"800-2000":0,"2000-3000":0,">2000":0,">3000":0,
       ">=18.5":0,">=25":0,"N/a":0,"<=2700":0,">=3700":0,"120/80":0,">130/80":0,
-      "<130/80":0,">=130/80":0,">140/80","95-145/80":0,"Mass":0,"Negligible":0,
+      "<130/80":0,">=130/80":0,">140/80":0,"95-145/80":0,"Mass":0,"Negligible":0,
       "Overweight":0,"M+/-":0,"M+7Kg":0,"-M+7Kg or 10Kg":0,"M minus 1Kg":0,
       "M minus 5Kg":0,"M minus 10Kg":0,"M minus 0.5-1Kg":0,"<M":0,"No change":0,
       "Negligible.1":0,"Male":0,"Female":0,
-      ...Object.fromEntries(symptoms.map(s => [s, 0])) 
+      ...Object.fromEntries(symptoms.map(s => [s, 0])) // Map symptoms to initial 0
     };
 
+    // Map dropdown selections to 1
     (["age","urine","bmi","water","bp","mass","massChange","gender"] as const).forEach(field => {
       const value = formData[field];
       if (value && data62Features.hasOwnProperty(value)) data62Features[value] = 1;
     });
 
+    // Map selected symptoms to 1
     formData.symptoms.forEach(symptom => {
       if (data62Features.hasOwnProperty(symptom)) data62Features[symptom] = 1;
     });
     
-    // Validation
+    // Optional: Basic validation before submission
     const requiredFields: (keyof Omit<FormData, 'symptoms'>)[] = ["age", "urine", "bmi", "water", "bp", "mass", "massChange", "gender"];
     const isFormValid = requiredFields.every(field => formData[field] !== "");
 
@@ -169,29 +155,20 @@ const Questionnaire = () => {
       }
 
       const result = await res.json();
-      
-      // ⭐️ ส่วนที่สำคัญ: รับค่า 'probability' จาก Backend
-      const predictedDisease = result.prediction;
-      const confidence = result.probability !== undefined ? result.probability : null;
-      
-      setModalContent({ 
-        title: "Analysis Result", 
-        message: `Predicted Disease: ${predictedDisease}`,
-        probability: confidence // เก็บค่าความมั่นใจไว้ใน state
-      });
+      setModalContent({ title: "Analysis Result", message: `Predicted Disease: ${result.prediction}` });
       setIsModalOpen(true);
     } catch (err: any) {
       toast({ title: "Error", description: `Could not connect or prediction failed: ${err.message}`, variant: "destructive" });
     }
   };
 
-// ----------------------------------------------------
-// 4. ส่วนแสดงผล (Render)
-// ----------------------------------------------------
+  // ====================================================================
+  // 4. ส่วนแสดงผล (Render)
+  // ====================================================================
   return (
     <div className="min-h-screen bg-background py-20 px-4">
       
-      {/* Server Status Indicator */}
+      {/* Server Status Indicator (Fixed Position) */}
       <div className="fixed bottom-5 right-5 bg-card rounded-lg shadow-lg px-4 py-2 flex items-center gap-2 border border-border z-50">
         <span className={`w-3.5 h-3.5 rounded-full ${serverStatus==="online"?"bg-green-500":serverStatus==="offline"?"bg-red-500":"bg-gray-400"}`}/>
         <span className="text-sm">
@@ -203,8 +180,7 @@ const Questionnaire = () => {
         <h1 className="text-4xl font-bold text-center mb-8 text-primary">Health Information Questionnaire</h1>
         <form onSubmit={handleSubmit} className="bg-card rounded-xl shadow-lg p-8 space-y-6">
 
-          {/* Dropdown Fields (Age, Urine, BMI, etc. - โค้ดส่วนนี้ไม่ได้เปลี่ยนแปลงโครงสร้าง) */}
-          {/* ... (โค้ดสำหรับ Age Select) ... */}
+          {/* Age */}
           <div>
             <Label htmlFor="age-select">Age</Label>
             <Select onValueChange={(v)=>handleSelectChange("age", v)} value={formData.age}>
@@ -214,7 +190,8 @@ const Questionnaire = () => {
               </SelectContent>
             </Select>
           </div>
-          {/* ... (โค้ดสำหรับ Urine Select) ... */}
+
+          {/* Urine */}
           <div>
             <Label htmlFor="urine-select">Urine per Day (mL)</Label>
             <Select onValueChange={(v)=>handleSelectChange("urine", v)} value={formData.urine}>
@@ -224,7 +201,8 @@ const Questionnaire = () => {
               </SelectContent>
             </Select>
           </div>
-          {/* ... (โค้ดสำหรับ BMI Select) ... */}
+
+          {/* BMI */}
           <div>
             <Label htmlFor="bmi-select">Body Mass Index (BMI)</Label>
             <Select onValueChange={(v)=>handleSelectChange("bmi", v)} value={formData.bmi}>
@@ -238,7 +216,8 @@ const Questionnaire = () => {
               </SelectContent>
             </Select>
           </div>
-          {/* ... (โค้ดสำหรับ Water Select) ... */}
+
+          {/* Water */}
           <div>
             <Label htmlFor="water-select">Water Intake (mL)</Label>
             <Select onValueChange={(v)=>handleSelectChange("water", v)} value={formData.water}>
@@ -248,7 +227,8 @@ const Questionnaire = () => {
               </SelectContent>
             </Select>
           </div>
-          {/* ... (โค้ดสำหรับ BP Select) ... */}
+
+          {/* Blood Pressure */}
           <div>
             <Label htmlFor="bp-select">Blood Pressure (Systolic/Diastolic)</Label>
             <Select onValueChange={(v)=>handleSelectChange("bp", v)} value={formData.bp}>
@@ -258,7 +238,8 @@ const Questionnaire = () => {
               </SelectContent>
             </Select>
           </div>
-          {/* ... (โค้ดสำหรับ Mass Select) ... */}
+
+          {/* Mass */}
           <div>
             <Label htmlFor="mass-select">Mass Classification</Label>
             <Select onValueChange={(v)=>handleSelectChange("mass", v)} value={formData.mass}>
@@ -268,7 +249,8 @@ const Questionnaire = () => {
               </SelectContent>
             </Select>
           </div>
-          {/* ... (โค้ดสำหรับ Mass Change Select) ... */}
+
+          {/* Mass Change */}
           <div>
             <Label htmlFor="massChange-select">Mass Change (Relative to Normal Mass 'M')</Label>
             <Select onValueChange={(v)=>handleSelectChange("massChange", v)} value={formData.massChange}>
@@ -278,7 +260,8 @@ const Questionnaire = () => {
               </SelectContent>
             </Select>
           </div>
-          {/* ... (โค้ดสำหรับ Gender Select) ... */}
+
+          {/* Gender */}
           <div>
             <Label htmlFor="gender-select">Gender</Label>
             <Select onValueChange={(v)=>handleSelectChange("gender", v)} value={formData.gender}>
@@ -289,7 +272,7 @@ const Questionnaire = () => {
             </Select>
           </div>
 
-          {/* Symptoms Checkboxes */}
+          {/* Symptoms */}
           <div>
             <Label>Symptoms</Label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
@@ -312,21 +295,12 @@ const Questionnaire = () => {
         </form>
       </div>
 
-      {/* Result Dialog (ส่วนที่ปรับปรุงเพื่อแสดง Confidence) */}
+      {/* Result Dialog */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-primary">{modalContent.title}</DialogTitle>
-            <DialogDescription className="text-lg pt-4">
-                <p><strong>{modalContent.message}</strong></p>
-                {/* ⭐️ แสดงความน่าจะเป็นเฉพาะเมื่อมีค่า (ไม่เป็น null) */}
-                {modalContent.probability !== null && (
-                    <p className="mt-4 text-xl font-extrabold text-green-600">
-                        {/* คำนวณและแสดงค่าความแม่นยำเป็นเปอร์เซ็นต์ */}
-                        Confidence Score: {(modalContent.probability * 100).toFixed(2)}%
-                    </p>
-                )}
-            </DialogDescription>
+            <DialogDescription className="text-lg pt-4">{modalContent.message}</DialogDescription>
           </DialogHeader>
         </DialogContent>
       </Dialog>
