@@ -4,7 +4,6 @@ import { createRoot } from "react-dom/client";
 import ServerStatusManager from "./ServerStatusManager.tsx"; // ⭐️ นำเข้า Component สำหรับจัดการสถานะเซิร์ฟเวอร์ ⭐️
 import "./index.css";
 
-// ใช้ createRoot ในการ Mount Component หลัก
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ServerStatusManager />
