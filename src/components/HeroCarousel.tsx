@@ -88,13 +88,15 @@ const HeroCarousel = () => {
             {slides[currentSlide].subtitle}
           </h2>
           <Link to="/questionnaire">
-            <Button 
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
-            >
-              START
-            </Button>
-          </Link>
+            <Button 
+              id="startButton" 
+              style={{ display: 'none' }}
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
+            >
+              START
+            </Button>
+          </Link>
         </div>
       </div>
 
