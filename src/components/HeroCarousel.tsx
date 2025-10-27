@@ -8,7 +8,7 @@ import hero3 from "@/assets/hero-3.jpg";
 import hero4 from "@/assets/hero-4.jpg";
 import hero5 from "@/assets/hero-5.jpg";
 
-const HeroCarousel = () => {
+const HeroCarousel = ({ isServerOnline }: { isServerOnline: boolean }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
@@ -89,8 +89,7 @@ const HeroCarousel = () => {
           </h2>
           <Link to="/questionnaire">
             <Button 
-              id="startButton" 
-              style={{ display: 'none' }}
+              style={{ display: isServerOnline ? 'flex' : 'none' }}
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
             >
