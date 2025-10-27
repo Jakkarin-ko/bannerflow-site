@@ -1,11 +1,12 @@
-import React from 'react'; // ต้อง Import React เพื่อใช้งาน <React.StrictMode>
-import { createRoot } from "react-dom/client";
-// import App from "./App.tsx"; // ไม่ใช้ App โดยตรงแล้ว
-import ServerStatusManager from "./ServerStatusManager.tsx"; // ⭐️ นำเข้า Component สำหรับจัดการสถานะเซิร์ฟเวอร์ ⭐️
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+// import App from './App.tsx' // หรือ Component หลักเดิมของคุณ
+import ServerStatusManager from './ServerStatusManager.tsx'; // ⭐️ นำเข้า Component ใหม่ ⭐️
+import './index.css';
 
-createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ServerStatusManager />
-  </React.StrictMode>
+    {/* ⭐️ รัน ServerStatusManager เป็น Component หลัก ⭐️ */}
+    <ServerStatusManager /> 
+  </React.StrictMode>,
 );
