@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import HeroCarousel from "./HeroCarousel";
+import HeroCarousel from ".src/components//HeroCarousel";
 import { Loader2, Zap, AlertTriangle } from "lucide-react"; 
 
 // ⭐️ กำหนด API Endpoint ⭐️
