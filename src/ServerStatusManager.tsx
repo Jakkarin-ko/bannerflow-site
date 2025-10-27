@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import HeroCarousel from "./HeroCarousel"; // สมมติว่า HeroCarousel อยู่ใน Component นี้
-// นำเข้า Icon/Component สำหรับแสดงสถานะ (คุณอาจต้องสร้างเอง)
+import HeroCarousel from "./components/HeroCarousel";
 import { Loader2, Zap, AlertTriangle } from "lucide-react"; 
 
 // ⭐️ กำหนด API Endpoint ⭐️
