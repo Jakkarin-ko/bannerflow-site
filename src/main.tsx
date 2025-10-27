@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// import App from './App.tsx' // หรือ Component หลักเดิมของคุณ
-import ServerStatusManager from './ServerStatusManager'; // ⭐️ นำเข้า Component ใหม่ ⭐️
+import { BrowserRouter } from 'react-router-dom'; // ✅ เพิ่ม BrowserRouter
+import ServerStatusManager from './ServerStatusManager.tsx'; // ⭐️ นำเข้า Component ใหม่
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    {/* ⭐️ รัน ServerStatusManager เป็น Component หลัก ⭐️ */}
-    <ServerStatusManager /> 
-  </React.StrictMode>,
+    {/* ✅ ครอบด้วย BrowserRouter เพื่อให้ <Link> ทำงานได้ */}
+    <BrowserRouter>
+      <ServerStatusManager /> 
+    </BrowserRouter>
+  </React.StrictMode>
 );
