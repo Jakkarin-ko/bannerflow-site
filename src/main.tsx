@@ -7,7 +7,6 @@ import "./index.css";
 // ใช้ createRoot ในการ Mount Component หลัก
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    {/* ⭐️ รัน ServerStatusManager เป็น Component หลัก ⭐️ */}
     <ServerStatusManager />
   </React.StrictMode>
 );
