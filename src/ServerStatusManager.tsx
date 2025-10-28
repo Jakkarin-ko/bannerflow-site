@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 // ⭐️ กำหนด API Endpoint ⭐️
 const API_ENDPOINT = 'https://aidetect-github-io.onrender.com';
 
-// ⭐️ กำหนดประเภทของสถานะ
 type ServerStatus = 'loading' | 'waking' | 'waiting' | 'online' | 'error';
 
 const ServerStatusManager = () => {
