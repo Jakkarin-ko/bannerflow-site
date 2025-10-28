@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom'; // ✅ เพิ่ม BrowserRouter
+import { HashRouter } from 'react-router-dom'; // ✅ เพิ่ม BrowserRouter
 import ServerStatusManager from './ServerStatusManager.tsx'; // ⭐️ นำเข้า Component ใหม่
 import './index.css';
 
