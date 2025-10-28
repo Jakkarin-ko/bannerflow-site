@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import HeroCarousel from "./components/HeroCarousel";
-import { Loader2, Zap, AlertTriangle } from "lucide-react"; 
+import { Loader2, Zap, AlertTriangle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // ⭐️ กำหนด API Endpoint ⭐️
 const API_ENDPOINT = 'https://aidetect-github-io.onrender.com';
@@ -11,6 +12,7 @@ type ServerStatus = 'loading' | 'waking' | 'waiting' | 'online' | 'error';
 const ServerStatusManager = () => {
   const [status, setStatus] = useState<ServerStatus>('loading');
   const [isOnline, setIsOnline] = useState(false);
+  const navigate = useNavigate();
 
   // 1. Logic สำหรับปลุกและตรวจสอบสถานะเซิร์ฟเวอร์
   useEffect(() => {
@@ -63,7 +65,16 @@ const ServerStatusManager = () => {
     wakeUpServer();
 
     // ไม่ต้องมี cleanup function เพราะเราใช้ setTimeout
-  }, []); 
+  }, []);
+
+  const handleStart = () => {
+    if (isOnline) {
+      // ⭐️ ใช้ useNavigate เพื่อเปลี่ยนไปยังเส้นทางที่ตั้งค่าใน index.tsx ⭐️
+      navigate('/questionnaire');
+    } else {
+      console.warn("Server not yet online. Cannot start.");
+    }
+  };
 
   // 2. Logic สำหรับการแสดงผลสถานะที่ด้านล่างขวา
   const renderStatusIndicator = () => {
@@ -114,14 +125,16 @@ const ServerStatusManager = () => {
 
   // 3. แสดง Component หลัก
   return (
-    <>
-      <HeroCarousel isServerOnline={isOnline} /> 
-      {/* ⭐️ ส่งสถานะ isOnline ไปให้ HeroCarousel ⭐️ */}
-      
-      {renderStatusIndicator()}
-      {/* ⭐️ แสดงตัวบ่งชี้สถานะเสมอ จนกว่าจะออนไลน์ ⭐️ */}
-    </>
-  );
+    <>
+      {/* ⭐️ ส่งฟังก์ชัน handleStart ไปยัง HeroCarousel ⭐️ */}
+      <HeroCarousel 
+        isServerOnline={isOnline} 
+        onStartClick={handleStart} // 👈 เพิ่มพร็อพพ์นี้
+      /> 
+      
+      {renderStatusIndicator()}
+    </>
+  );
 };
 
 export default ServerStatusManager;
