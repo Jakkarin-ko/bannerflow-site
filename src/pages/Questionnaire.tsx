@@ -1,5 +1,6 @@
 import { useState, useEffect, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -38,7 +39,7 @@ const Questionnaire = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({ title: "", message: "" });
   const { toast } = useToast();
-
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     age: "",
     urine: "",
