@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Header from "./components/Header"; 
 import HeroCarousel from "./components/HeroCarousel";
 import { Loader2, Zap, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
