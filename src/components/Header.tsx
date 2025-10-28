@@ -21,6 +21,7 @@ const Header = () => {
   const [openDialog, setOpenDialog] = useState<DialogType>(null);
 
   const dialogContent = {
+    // ... (dialogContent โค้ดส่วนนี้ยังเหมือนเดิม)
     account: {
       title: "Account",
       description: "Manage your account settings and preferences",
@@ -58,39 +59,46 @@ const Header = () => {
             <nav className="hidden md:flex items-center gap-8">
               <button
                 onClick={() => setOpenDialog("account")}
-                className="text-sm font-medium hover:text-primary transition-colors"
+                // 🎯 เปลี่ยนสีข้อความเป็น text-primary
+                className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
               >
                 Account
               </button>
               <button
                 onClick={() => setOpenDialog("settings")}
-                className="text-sm font-medium hover:text-primary transition-colors"
+                // 🎯 เปลี่ยนสีข้อความเป็น text-primary
+                className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
               >
                 Settings
               </button>
               <button
                 onClick={() => setOpenDialog("about")}
-                className="text-sm font-medium hover:text-primary transition-colors"
+                // 🎯 เปลี่ยนสีข้อความเป็น text-primary
+                className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
               >
                 About Us
               </button>
               <button
                 onClick={() => setOpenDialog("feedback")}
-                className="text-sm font-medium hover:text-primary transition-colors"
+                // 🎯 เปลี่ยนสีข้อความเป็น text-primary
+                className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
               >
                 Feedback
               </button>
               <button
                 onClick={() => setOpenDialog("privacy")}
-                className="text-sm font-medium hover:text-primary transition-colors"
+                // 🎯 เปลี่ยนสีข้อความเป็น text-primary
+                className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
               >
                 Privacy & Policy
               </button>
             </nav>
 
+            {/* ส่วนปุ่มเปลี่ยนภาษา */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
+                {/* 🎯 แก้ไข Button ให้มีสีข้อความหลักเป็น text-primary */}
+                <Button variant="outline" size="sm" className="gap-2 text-primary border-primary hover:bg-primary/10">
                   <Globe className="h-4 w-4" />
                   <span className="hidden sm:inline">Language</span>
                 </Button>
