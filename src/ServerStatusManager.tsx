@@ -12,8 +12,7 @@ const ServerStatusManager = () => {
   const [status, setStatus] = useState<ServerStatus>('loading');
   const [isOnline, setIsOnline] = useState(false);
   const navigate = useNavigate();
-
-  // 1. Logic สำหรับปลุกและตรวจสอบสถานะเซิร์ฟเวอร์
+  
   useEffect(() => {
     // ฟังก์ชันปลุกเซิร์ฟเวอร์
     const wakeUpServer = async () => {
