@@ -1,5 +1,3 @@
-// index.tsx
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 // ⭐️ นำเข้า Routes และ Route เพิ่มเติม ⭐️
