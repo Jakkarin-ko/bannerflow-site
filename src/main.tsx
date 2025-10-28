@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import ServerStatusManager from './ServerStatusManager.tsx';
 // ⭐️ ต้องนำเข้า Component ที่เป็นหน้าปลายทาง ⭐️
-import QuestionnairePage from './pages/QuestionnairePage.tsx'; 
+import QuestionnairePage from './pages/Questionnaire.tsx'; 
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
