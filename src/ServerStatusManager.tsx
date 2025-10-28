@@ -124,15 +124,19 @@ const ServerStatusManager = () => {
 
   // 3. แสดง Component หลัก
   return (
-    <>
-      {/* ⭐️ ส่งฟังก์ชัน handleStart ไปยัง HeroCarousel ⭐️ */}
-      <HeroCarousel 
-        isServerOnline={isOnline} 
-        onStartClick={handleStart} // 👈 เพิ่มพร็อพพ์นี้
-      /> 
-      
-      {renderStatusIndicator()}
-    </>
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+      
+      {/* ⭐️ Header is FIXED and Z-50 ⭐️ */}
+      <Header />
+
+      {/* ⭐️ MAIN CONTENT: บรรทัดนี้คือที่เพิ่ม pt-16 เข้าไป ⭐️ */}
+      <main className="relative flex-grow pt-16"> 
+        
+        {/* HeroCarousel fills the remaining screen space */}
+        <HeroCarousel 
+          onStartClick={handleStartClick} 
+          isServerOnline={isServerOnline} 
+        />
   );
 };
 
