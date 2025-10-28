@@ -6,6 +6,7 @@ import ServerStatusManager from './ServerStatusManager.tsx';
 // ⭐️ ต้องนำเข้า Component ที่เป็นหน้าปลายทาง ⭐️
 import QuestionnairePage from './pages/Questionnaire.tsx'; 
 import './index.css';
+import './i18n.ts';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

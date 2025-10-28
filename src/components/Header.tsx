@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Globe } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -19,10 +20,12 @@ type DialogType = "account" | "settings" | "about" | "feedback" | "privacy" | nu
 
 const Header = () => {
   const [openDialog, setOpenDialog] = useState<DialogType>(null);
-
+  const { t, i18n } = useTranslation();
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
   const dialogContent = {
-    // ... (dialogContent โค้ดส่วนนี้ยังเหมือนเดิม)
-    account: {
+    
       title: "Account",
       description: "Manage your account settings and preferences",
       items: ["Profile Settings", "Billing Information", "Security", "Notifications"],
@@ -104,8 +107,8 @@ const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-popover">
+                <DropdownMenuItem>Thailand</DropdownMenuItem>
                 <DropdownMenuItem>English</DropdownMenuItem>
-                <DropdownMenuItem>Español</DropdownMenuItem>
                 <DropdownMenuItem>Français</DropdownMenuItem>
                 <DropdownMenuItem>Deutsch</DropdownMenuItem>
                 <DropdownMenuItem>中文</DropdownMenuItem>
