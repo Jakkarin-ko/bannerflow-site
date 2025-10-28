@@ -3,6 +3,14 @@ import HeroCarousel from "./components/HeroCarousel";
 import { Loader2, Zap, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+// ⚠️ ต้องสร้างไฟล์ Header.tsx ใน components/ ก่อน จึงจะใช้งานได้
+// โค้ดสมมติ: เนื่องจากโค้ดเต็มของ Header ไม่ได้ถูกระบุมา
+const Header = () => (
+  <header className="fixed top-0 left-0 w-full z-50 bg-gray-800 p-4 shadow-md">
+    <h1 className="text-xl font-bold">AI Health Check</h1>
+  </header>
+);
+
 // ⭐️ กำหนด API Endpoint ⭐️
 const API_ENDPOINT = 'https://aidetect-github-io.onrender.com';
 
@@ -123,7 +131,7 @@ const ServerStatusManager = () => {
 
   // 3. แสดง Component หลัก
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
       
       {/* ⭐️ Header is FIXED and Z-50 ⭐️ */}
       <Header />
@@ -133,10 +141,15 @@ const ServerStatusManager = () => {
         
         {/* HeroCarousel fills the remaining screen space */}
         <HeroCarousel 
-          onStartClick={handleStartClick} 
-          isServerOnline={isServerOnline} 
+          onStartClick={handleStart} // 💡 แก้ไข Prop ให้ใช้ฟังก์ชัน handleStart
+          isServerOnline={isOnline} // 💡 แก้ไข Prop ให้ใช้ State isOnline
         />
-  );
+      </main> {/* 👈 แท็กปิด <main> ที่หายไป ถูกเพิ่มแล้ว */}
+      
+      {renderStatusIndicator()} {/* 👈 แสดงสถานะ */}
+      
+    </div> // 👈 แท็กปิด <div> ที่หายไป ถูกเพิ่มแล้ว
+  ); // 👈 วงเล็บปิดของ return
 };
 
 export default ServerStatusManager;
