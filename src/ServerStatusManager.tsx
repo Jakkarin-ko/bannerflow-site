@@ -3,15 +3,6 @@ import HeroCarousel from "./components/HeroCarousel";
 import { Loader2, Zap, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// ⚠️ ต้องสร้างไฟล์ Header.tsx ใน components/ ก่อน จึงจะใช้งานได้
-// โค้ดสมมติ: เนื่องจากโค้ดเต็มของ Header ไม่ได้ถูกระบุมา
-const Header = () => (
-  <header className="fixed top-0 left-0 w-full z-50 bg-gray-800 p-4 shadow-md">
-    <h1 className="text-xl font-bold">AI Health Check</h1>
-  </header>
-);
-
-// ⭐️ กำหนด API Endpoint ⭐️
 const API_ENDPOINT = 'https://aidetect-github-io.onrender.com';
 
 type ServerStatus = 'loading' | 'waking' | 'waiting' | 'online' | 'error';
