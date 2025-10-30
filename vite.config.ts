@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   // **เพิ่มบรรทัดนี้เพื่อแก้ปัญหา Base Path**
-  base: "/bannerflow-site/",
+  base: "/ai-detect/",
 
   server: {
     host: "::",
